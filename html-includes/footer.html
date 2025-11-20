@@ -1,0 +1,121 @@
+<!-- Footer Component -->
+<style>
+.footer {
+    background-color: #E32875;
+    padding: 30px 20px;
+    margin-top: 0;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.footer-links {
+    font-family: 'Figtree', sans-serif;
+    font-size: 14px;
+    color: #000000;
+    margin-bottom: 15px;
+    background-color: #FFE5F0;
+}
+
+.footer-links a {
+    color: #ffffff;
+    text-decoration: none;
+    transition: opacity 0.3s;
+}
+
+.footer-links a:hover {
+    opacity: 0.8;
+}
+
+.footer-links .separator {
+    margin: 0 10px;
+    color: #ffffff;
+}
+
+.footer-copyright {
+    font-family: 'Figtree', sans-serif;
+    font-size: 14px;
+    color: #ffffff;
+}
+
+@media (max-width: 768px) {
+    .footer {
+        padding: 0;
+    }
+    
+    .footer-links {
+        font-size: 12px;
+    }
+    
+    .footer-copyright {
+        font-size: 12px;
+    }
+}
+</style>
+
+<div class="footer">
+    <div class="footer-content">
+        <div class="footer-links" id="footer-links">
+            <!-- Footer links will be dynamically inserted here -->
+        </div>
+        <div class="footer-copyright" id="footer-copyright">
+            <!-- Copyright text will be dynamically inserted here -->
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    // Get page-name from pageConfig (defined in the parent HTML)
+    const pageName = (typeof pageConfig !== 'undefined' && pageConfig['page-name']) 
+        ? pageConfig['page-name'] 
+        : 'index';
+    
+    // Get the base path from the current script location
+    const scriptPath = document.currentScript ? document.currentScript.src : '';
+    const basePath = scriptPath ? scriptPath.substring(0, scriptPath.lastIndexOf('/')) : '';
+    const jsonPath = basePath 
+        ? `${basePath}/page-content/${pageName}.json` 
+        : `html-includes/page-content/${pageName}.json`;
+    
+    (async function() {
+        try {
+            const response = await fetch(jsonPath);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch JSON: ${jsonPath}`);
+            }
+            const data = await response.json();
+            const footerData = data.footer;
+            
+            const footerDiv = document.querySelector('.footer');
+            if (footerDiv) {
+                const links = footerDiv.querySelector('#footer-links');
+                const copyright = footerDiv.querySelector('#footer-copyright');
+                
+                if (footerData) {
+                    // Set footer links
+                    if (links && footerData.links && Array.isArray(footerData.links)) {
+                        const linksHTML = footerData.links.map((link, index) => {
+                            const separator = index < footerData.links.length - 1 ? '<span class="separator">|</span>' : '';
+                            return `<a href="${link.url || '#'}">${link.text || ''}</a>${separator}`;
+                        }).join(' ');
+                        links.innerHTML = linksHTML;
+                    }
+                    
+                    // Set copyright
+                    if (copyright && footerData.copyright) {
+                        copyright.innerHTML = footerData.copyright;
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error loading footer content:', error);
+            console.error(`Tried to load: ${jsonPath}`);
+        }
+    })();
+})();
+</script>
+

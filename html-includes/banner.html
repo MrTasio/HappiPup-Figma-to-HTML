@@ -1,0 +1,86 @@
+<!-- Banner Component -->
+<style>
+.banner {
+    padding: 12px 20px;
+    text-align: center;
+    width: 100%;
+    background-color: #E32875;
+}
+
+.banner-link {
+    text-decoration: none;
+    display: inline-block;
+    transition: opacity 0.3s ease;
+    font-family: 'Figtree', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #ffffff;
+    letter-spacing: 0.01em;
+}
+
+.banner-link:hover {
+    opacity: 0.9;
+}
+
+@media (max-width: 480px) {
+    .banner-link {
+        font-size: 14px;
+    }
+    
+    .banner {
+        padding: 10px 15px;
+    }
+}
+</style>
+
+<div class="banner">
+    <a href="#" class="banner-link" id="banner-link">
+        Loading...
+    </a>
+</div>
+
+<script>
+(function() {
+    // Get page-name from pageConfig (defined in the parent HTML)
+    const pageName = (typeof pageConfig !== 'undefined' && pageConfig['page-name']) 
+        ? pageConfig['page-name'] 
+        : 'index';
+    
+    // Get the base path from the current script location
+    const scriptPath = document.currentScript ? document.currentScript.src : '';
+    const basePath = scriptPath ? scriptPath.substring(0, scriptPath.lastIndexOf('/')) : '';
+    const jsonPath = basePath 
+        ? `${basePath}/page-content/${pageName}.json` 
+        : `html-includes/page-content/${pageName}.json`;
+    
+    (async function() {
+        try {
+            const response = await fetch(jsonPath);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch JSON: ${jsonPath}`);
+            }
+            const data = await response.json();
+            const banner = data.banner;
+            
+            const bannerLink = document.getElementById('banner-link');
+            const bannerDiv = bannerLink ? bannerLink.closest('.banner') : null;
+            
+            if (bannerLink && bannerDiv) {
+                // Update link attributes
+                bannerLink.href = banner.link;
+                bannerLink.innerHTML = banner.text + ' →';
+            }
+        } catch (error) {
+            console.error('Error loading banner content:', error);
+            console.error(`Tried to load: ${jsonPath}`);
+            // Fallback content with default styles
+            const bannerLink = document.getElementById('banner-link');
+            const bannerDiv = bannerLink ? bannerLink.closest('.banner') : null;
+            
+            if (bannerLink) {
+                bannerLink.innerHTML = 'From Stressed & Reactive to Calm & Obedient: My Dog\'s 7-Day Reset Story →';
+            }
+        }
+    })();
+})();
+</script>

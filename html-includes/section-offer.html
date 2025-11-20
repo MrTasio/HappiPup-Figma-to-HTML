@@ -1,0 +1,450 @@
+<!-- Section Offer Component -->
+<style>
+.section-offer {
+    padding: 17px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    /* background-color will be set dynamically via JavaScript, default: #ffffff */
+}
+
+.section-offer-banner {
+    background-color: #FFF5C6;
+    border-radius: 8px;
+    padding: 0;
+    text-align: center;
+    margin-bottom: 0px;
+}
+
+.section-offer-banner-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #300146;
+    display: inline;
+}
+
+.section-offer-discount {
+    font-family: 'Poppins', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #E32875;
+    display: inline;
+    margin-left: 5px;
+}
+
+.section-offer-content-wrapper {
+    /* Wrapper for pricing, CTA, bonus, and total value sections */
+    width: 100%;
+    padding: 20px;
+    /* background-color will be set dynamically via JavaScript */
+}
+
+.section-offer-pricing {
+    margin-bottom: 25px;
+}
+
+.section-offer-pricing-text {
+    font-family: 'Figtree', sans-serif;
+    font-size: 18px;
+    line-height: 30px;
+    color: #0A0A0A;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.section-offer-price-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.section-offer-price-label {
+    font-family: 'Figtree', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #0A0A0A;
+    margin-bottom: 5px;
+}
+
+.section-offer-price {
+    font-family: 'Poppins', sans-serif;
+    font-size: 55px;
+    font-weight: 700;
+    color: #300146;
+    position: relative;
+    display: inline-block;
+}
+
+.section-offer-price-underline {
+    position: absolute;
+    bottom: -48px;
+    left: 0;
+    width: 100%;
+}
+
+.section-offer-cta-button {
+    background-color: #04B616;
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 18px 55px;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    margin: 25px 0 5px;
+    text-transform: uppercase;
+    transition: background-color 0.3s;
+}
+
+.section-offer-cta-button:hover {
+    background-color: #45a049;
+}
+
+.section-offer-cta-note {
+    font-family: 'Figtree', sans-serif;
+    font-size: 12px;
+    line-height: 24px;
+    color: #0A0A0A;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.section-offer-bonus-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #300146;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.section-offer-bonus-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+    margin-bottom: 35px;
+}
+
+.section-offer-bonus-card {
+    background-color: #fff;
+    border: 2px solid #E32875;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.section-offer-bonus-card-header {
+    background-color: #E32875;
+    padding: 15px 20px;
+}
+
+.section-offer-bonus-card-gift-label {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #FFD700;
+    margin-bottom: 5px;
+}
+
+.section-offer-bonus-card-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 5px;
+}
+
+.section-offer-bonus-card-value {
+    font-family: 'Figtree', sans-serif;
+    font-size: 14px;
+    color: #ffffff;
+}
+
+.section-offer-bonus-card-image {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    background-color: #fff;
+}
+
+.section-offer-bonus-card-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    display: block;
+}
+
+.section-offer-bonus-card-benefits {
+    padding: 0 20px 20px 20px;
+    background-color: #fff;
+}
+
+.section-offer-bonus-card-benefits-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.section-offer-bonus-card-benefits-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 10px;
+    font-family: 'Figtree', sans-serif;
+    font-size: 16px;
+    line-height: 24px;
+    color: #0A0A0A;
+}
+
+.section-offer-bonus-card-benefits-list li:last-child {
+    margin-bottom: 0;
+}
+
+.section-offer-bonus-card-benefits-list li img {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.section-offer-total-value {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.section-offer-total-value-label {
+    font-family: 'Figtree', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 30px;
+    color: #0A0A0A;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.section-offer-total-value-label .strikethrough {
+    text-decoration: line-through;
+    color: #E32875;
+}
+
+.section-offer-total-value-price {
+    font-family: 'Poppins', sans-serif;
+    font-size: 44px;
+    font-weight: 700;
+    color: #300146;
+    position: relative;
+    display: inline-block;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.section-offer-total-value-price-underline {
+    position: absolute;
+    bottom: -30px;
+    right: -16px;
+    width: 33%;
+}
+
+@media (max-width: 768px) {
+    .section-offer {
+        padding: 17px 15px;
+    }
+    
+    .section-offer-price {
+        font-size: 55px;
+    }
+    
+    .section-offer-bonus-cards {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<div class="section-offer">
+    <div class="section-offer-banner" id="section-offer-banner">
+        <!-- Banner will be dynamically inserted here -->
+    </div>
+    
+    <div class="section-offer-content-wrapper">
+        <div class="section-offer-pricing" id="section-offer-pricing">
+            <!-- Pricing will be dynamically inserted here -->
+        </div>
+        
+        <div id="section-offer-cta">
+            <!-- CTA button will be dynamically inserted here -->
+        </div>
+        
+        <div class="section-offer-bonus-title" id="section-offer-bonus-title">
+            <!-- Bonus title will be dynamically inserted here -->
+        </div>
+        
+        <div class="section-offer-bonus-cards" id="section-offer-bonus-cards">
+            <!-- Bonus cards will be dynamically inserted here -->
+        </div>
+        
+        <div class="section-offer-total-value" id="section-offer-total-value">
+            <!-- Total value will be dynamically inserted here -->
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    // Get page-name from pageConfig (defined in the parent HTML)
+    const pageName = (typeof pageConfig !== 'undefined' && pageConfig['page-name']) 
+        ? pageConfig['page-name'] 
+        : 'index';
+    
+    // Get the base path from the current script location
+    const scriptPath = document.currentScript ? document.currentScript.src : '';
+    const basePath = scriptPath ? scriptPath.substring(0, scriptPath.lastIndexOf('/')) : '';
+    const jsonPath = basePath 
+        ? `${basePath}/page-content/${pageName}.json` 
+        : `html-includes/page-content/${pageName}.json`;
+    
+    (async function() {
+        // Get the dataKey from the container's data attribute
+        const container = document.currentScript ? document.currentScript.closest('.component-container') : null;
+        const dataKey = container ? container.getAttribute('data-key') : 'section-offer';
+        
+        // Find elements within this specific container instance
+        const sectionDiv = container ? container.querySelector('.section-offer') : null;
+        
+        try {
+            const response = await fetch(jsonPath);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch JSON: ${jsonPath}`);
+            }
+            const data = await response.json();
+            const sectionData = data[dataKey];
+            
+            if (sectionDiv) {
+                const banner = sectionDiv.querySelector('#section-offer-banner');
+                const contentWrapper = sectionDiv.querySelector('.section-offer-content-wrapper');
+                const pricing = sectionDiv.querySelector('#section-offer-pricing');
+                const cta = sectionDiv.querySelector('#section-offer-cta');
+                const bonusTitle = sectionDiv.querySelector('#section-offer-bonus-title');
+                const bonusCards = sectionDiv.querySelector('#section-offer-bonus-cards');
+                
+                if (sectionData) {
+                    // Set background color for section (default: #ffffff)
+                    const bgColor = sectionData['bg-color'] || '#ffffff';
+                    sectionDiv.style.backgroundColor = bgColor;
+                    
+                    // Set background color for content wrapper if specified
+                    if (contentWrapper && sectionData['content-wrapper-bg-color']) {
+                        contentWrapper.style.backgroundColor = sectionData['content-wrapper-bg-color'];
+                    }
+                    
+                    // Set banner
+                    if (banner && sectionData.banner) {
+                        banner.innerHTML = `
+                            <span class="section-offer-banner-text">${sectionData.banner.label}</span>
+                            <span class="section-offer-discount">${sectionData.banner.discount}</span>
+                        `;
+                    }
+                    
+                    // Set pricing
+                    if (pricing && sectionData.pricing) {
+                        const priceText = sectionData.pricing.priceText || '';
+                        const priceLabel = sectionData.pricing.priceLabel || '';
+                        const price = sectionData.pricing.price || '';
+                        const underlineImage = sectionData.pricing.underlineImage || '';
+                        
+                        pricing.innerHTML = `
+                            ${sectionData.pricing.texts ? sectionData.pricing.texts.map(text => 
+                                `<div class="section-offer-pricing-text">${text}</div>`
+                            ).join('') : ''}
+                            ${priceLabel || price ? `
+                                <div class="section-offer-price-container">
+                                    ${priceLabel ? `<div class="section-offer-price-label">${priceLabel}</div>` : ''}
+                                    ${price ? `
+                                        <div class="section-offer-price">
+                                            ${priceText || price}
+                                            ${underlineImage ? `<img src="${underlineImage}" alt="Underline" class="section-offer-price-underline">` : ''}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            ` : ''}
+                        `;
+                    }
+                    
+                    // Set CTA button
+                    if (cta && sectionData.cta) {
+                        cta.innerHTML = `
+                            <button class="section-offer-cta-button" onclick="${sectionData.cta.onclick || 'void(0)'}">${sectionData.cta.text}</button>
+                            ${sectionData.cta.note ? `<div class="section-offer-cta-note">${sectionData.cta.note}</div>` : ''}
+                        `;
+                    }
+                    
+                    // Set bonus title
+                    if (bonusTitle && sectionData.bonusTitle) {
+                        bonusTitle.innerHTML = sectionData.bonusTitle;
+                    }
+                    
+                    // Set bonus cards
+                    if (bonusCards && sectionData.bonusCards && Array.isArray(sectionData.bonusCards)) {
+                        bonusCards.innerHTML = sectionData.bonusCards.map(card => {
+                            const benefitsList = card.benefits && Array.isArray(card.benefits)
+                                ? card.benefits.map(benefit => 
+                                    `<li><img src="images/5610944 (2) 1.png" alt="Checkmark"><span>${benefit}</span></li>`
+                                ).join('')
+                                : '';
+                            
+                            return `
+                                <div class="section-offer-bonus-card">
+                                    <div class="section-offer-bonus-card-header">
+                                        ${card.giftLabel ? `<div class="section-offer-bonus-card-gift-label">${card.giftLabel}</div>` : ''}
+                                        ${card.title ? `<div class="section-offer-bonus-card-title">${card.title}</div>` : ''}
+                                        ${card.value ? `<div class="section-offer-bonus-card-value">${card.value}</div>` : ''}
+                                    </div>
+                                    ${card.image ? `
+                                        <div class="section-offer-bonus-card-image">
+                                            <img src="${card.image}" alt="${card.title || 'Bonus Gift'}">
+                                        </div>
+                                    ` : ''}
+                                    ${benefitsList ? `
+                                        <div class="section-offer-bonus-card-benefits">
+                                            <ul class="section-offer-bonus-card-benefits-list">${benefitsList}</ul>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                    
+                    // Set total value
+                    const totalValue = sectionDiv.querySelector('#section-offer-total-value');
+                    if (totalValue && sectionData.totalValue) {
+                        const totalValueLabel = sectionData.totalValue.label || '';
+                        const totalValuePrice = sectionData.totalValue.price || '';
+                        const totalValuePriceText = sectionData.totalValue.priceText || '';
+                        const totalValueUnderline = sectionData.totalValue.underlineImage || '';
+                        
+                        totalValue.innerHTML = `
+                            ${totalValueLabel ? `<div class="section-offer-total-value-label">${totalValueLabel}</div>` : ''}
+                            ${totalValuePrice || totalValuePriceText ? `
+                                <div class="section-offer-total-value-price">
+                                    ${totalValuePriceText || totalValuePrice}
+                                    ${totalValueUnderline ? `<img src="${totalValueUnderline}" alt="Underline" class="section-offer-total-value-price-underline">` : ''}
+                                </div>
+                            ` : ''}
+                        `;
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error loading section offer content:', error);
+            console.error(`Tried to load: ${jsonPath}`);
+        }
+    })();
+})();
+</script>
+

@@ -1,0 +1,148 @@
+<!-- Section How It Works Component -->
+<style>
+.section-how-it-works {
+    padding: 25px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    /* background-color will be set dynamically via JavaScript, default: #ffffff */
+}
+
+.section-how-it-works-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #300146;
+    text-align: center;
+    margin-bottom: 30px;
+    line-height: 30px;
+}
+
+.section-how-it-works-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.section-how-it-works-step {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 350px;
+    margin: auto;
+}
+
+.section-how-it-works-step-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.section-how-it-works-step-icon img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    display: block;
+}
+
+.section-how-it-works-step-text {
+    font-family: 'Figtree', sans-serif;
+    font-size: 18px;
+    line-height: 30px;
+    color: #0A0A0A;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .section-how-it-works {
+        padding: 17px 15px;
+    }
+    
+    .section-how-it-works-step {
+        padding: 20px;
+    }
+}
+</style>
+
+<div class="section-how-it-works">
+    <div class="section-how-it-works-title" id="section-how-it-works-title">
+        Loading...
+    </div>
+    
+    <div class="section-how-it-works-steps" id="section-how-it-works-steps">
+        <!-- Steps will be dynamically inserted here -->
+    </div>
+</div>
+
+<script>
+(function() {
+    // Get page-name from pageConfig (defined in the parent HTML)
+    const pageName = (typeof pageConfig !== 'undefined' && pageConfig['page-name']) 
+        ? pageConfig['page-name'] 
+        : 'index';
+    
+    // Get the base path from the current script location
+    const scriptPath = document.currentScript ? document.currentScript.src : '';
+    const basePath = scriptPath ? scriptPath.substring(0, scriptPath.lastIndexOf('/')) : '';
+    const jsonPath = basePath 
+        ? `${basePath}/page-content/${pageName}.json` 
+        : `html-includes/page-content/${pageName}.json`;
+    
+    (async function() {
+        // Get the dataKey from the container's data attribute
+        const container = document.currentScript ? document.currentScript.closest('.component-container') : null;
+        const dataKey = container ? container.getAttribute('data-key') : 'section-how-it-works';
+        
+        // Find elements within this specific container instance
+        const sectionDiv = container ? container.querySelector('.section-how-it-works') : null;
+        
+        try {
+            const response = await fetch(jsonPath);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch JSON: ${jsonPath}`);
+            }
+            const data = await response.json();
+            const sectionData = data[dataKey];
+            
+            if (sectionDiv) {
+                const title = sectionDiv.querySelector('#section-how-it-works-title');
+                const stepsContainer = sectionDiv.querySelector('#section-how-it-works-steps');
+                
+                if (sectionData) {
+                    // Set background color (default: #ffffff)
+                    const bgColor = sectionData['bg-color'] || '#ffffff';
+                    sectionDiv.style.backgroundColor = bgColor;
+                    
+                    // Set title
+                    if (title && sectionData.title) {
+                        title.innerHTML = sectionData.title;
+                    }
+                    
+                    // Render steps
+                    if (stepsContainer && sectionData.steps && Array.isArray(sectionData.steps)) {
+                        stepsContainer.innerHTML = sectionData.steps.map((step, index) => 
+                            `<div class="section-how-it-works-step">
+                                <div class="section-how-it-works-step-icon">
+                                    <img src="${step.image}" alt="Step ${index + 1}">
+                                </div>
+                                <div class="section-how-it-works-step-text">${step.text}</div>
+                            </div>`
+                        ).join('');
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error loading section how it works content:', error);
+            console.error(`Tried to load: ${jsonPath}`);
+        }
+    })();
+})();
+</script>
+

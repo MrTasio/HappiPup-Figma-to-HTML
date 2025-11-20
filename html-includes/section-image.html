@@ -1,0 +1,191 @@
+<!-- Section Image Component - Image with optional headline, content, and CTA -->
+<style>
+.section-image {
+    padding: 17px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    /* background-color will be set dynamically via JavaScript, default: #ffffff */
+}
+
+.section-image-headline {
+    font-family: 'Poppins', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 30px;
+    color: #5C1E6B;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.section-image-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.section-image-container img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.section-image-content {
+    font-family: 'Figtree', sans-serif;
+    font-size: 18px;
+    line-height: 30px;
+    color: #0A0A0A;
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.section-image-content p {
+    margin-bottom: 30px;
+}
+
+.section-image-cta {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.section-image-cta-button {
+    background-color: #28A745;
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 18px 30px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    text-transform: uppercase;
+    display: block;
+    transition: background-color 0.3s;
+    line-height: 26px;
+}
+
+.section-image-cta-button:hover {
+    background-color: #218838;
+}
+
+@media (max-width: 768px) {
+    .section-image {
+        padding: 17px 15px;
+    }
+    
+    .section-image-headline {
+        font-size: 22px;
+    }
+}
+</style>
+
+<div class="section-image">
+    <div class="section-image-headline" id="section-image-headline" style="display: none;">
+        <!-- Headline will be dynamically inserted here -->
+    </div>
+    
+    <div class="section-image-container" id="section-image-container">
+        <!-- Image will be dynamically inserted here -->
+    </div>
+    
+    <div class="section-image-content" id="section-image-content" style="display: none;">
+        <!-- Content will be dynamically inserted here -->
+    </div>
+    
+    <div class="section-image-cta" id="section-image-cta" style="display: none;">
+        <!-- CTA button will be dynamically inserted here -->
+    </div>
+</div>
+
+<script>
+(function() {
+    // Get page-name from pageConfig (defined in the parent HTML)
+    const pageName = (typeof pageConfig !== 'undefined' && pageConfig['page-name']) 
+        ? pageConfig['page-name'] 
+        : 'index';
+    
+    // Get the base path from the current script location
+    const scriptPath = document.currentScript ? document.currentScript.src : '';
+    const basePath = scriptPath ? scriptPath.substring(0, scriptPath.lastIndexOf('/')) : '';
+    const jsonPath = basePath 
+        ? `${basePath}/page-content/${pageName}.json` 
+        : `html-includes/page-content/${pageName}.json`;
+    
+    (async function() {
+        // Get the dataKey from the container's data attribute
+        const container = document.currentScript ? document.currentScript.closest('.component-container') : null;
+        const dataKey = container ? container.getAttribute('data-key') : 'section-image';
+        
+        // Find elements within this specific container instance
+        const sectionDiv = container ? container.querySelector('.section-image') : null;
+        
+        try {
+            const response = await fetch(jsonPath);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch JSON: ${jsonPath}`);
+            }
+            const data = await response.json();
+            const sectionData = data[dataKey];
+            
+            if (sectionDiv) {
+                const headline = sectionDiv.querySelector('#section-image-headline');
+                const imageContainer = sectionDiv.querySelector('#section-image-container');
+                const content = sectionDiv.querySelector('#section-image-content');
+                const cta = sectionDiv.querySelector('#section-image-cta');
+                
+                if (sectionData) {
+                    // Set background color (default: #ffffff)
+                    const bgColor = sectionData['bg-color'] || '#ffffff';
+                    sectionDiv.style.backgroundColor = bgColor;
+                    
+                    // Set headline
+                    if (headline && sectionData.headline) {
+                        headline.innerHTML = sectionData.headline;
+                        headline.style.display = 'block';
+                    }
+                    
+                    // Set image
+                    if (imageContainer && sectionData.image) {
+                        const img = document.createElement('img');
+                        img.src = sectionData.image;
+                        img.alt = sectionData.alt || 'Section image';
+                        
+                        // Apply max-width if specified
+                        if (sectionData['image-max-width']) {
+                            img.style.maxWidth = sectionData['image-max-width'];
+                        }
+                        
+                        imageContainer.innerHTML = '';
+                        imageContainer.appendChild(img);
+                    } else if (imageContainer) {
+                        imageContainer.style.display = 'none';
+                    }
+                    
+                    // Set content
+                    if (content && sectionData.content) {
+                        content.innerHTML = sectionData.content;
+                        content.style.display = 'block';
+                    }
+                    
+                    // Set CTA button
+                    if (cta && sectionData.cta) {
+                        cta.innerHTML = `
+                            <button class="section-image-cta-button" onclick="${sectionData.cta.onclick || 'void(0)'}">${sectionData.cta.text}</button>
+                        `;
+                        cta.style.display = 'block';
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error loading section image content:', error);
+            console.error(`Tried to load: ${jsonPath}`);
+        }
+    })();
+})();
+</script>
+

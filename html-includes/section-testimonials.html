@@ -1,0 +1,217 @@
+<!-- Section Testimonials Component -->
+<style>
+.section-testimonials {
+    padding: 17px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    /* background-color will be set dynamically via JavaScript, default: #ffffff */
+}
+
+.section-testimonials-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #300146;
+    text-align: center;
+    margin-bottom: 30px;
+    line-height: 30px;
+}
+
+.section-testimonials-title .highlight {
+    color: #E32875;
+}
+
+.section-testimonials-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.section-testimonial-card {
+    background-color: #fff;
+    border: 1px solid #300146;
+    border-radius: 12px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
+.section-testimonial-stars {
+    margin-bottom: 15px;
+    font-size: 20px;
+    color: #FF9800;
+    letter-spacing: 2px;
+}
+
+.section-testimonial-text {
+    font-family: 'Figtree', sans-serif;
+    font-size: 16px;
+    line-height: 24px;
+    color: #0A0A0A;
+    font-style: italic;
+    margin-bottom: 20px;
+    flex: 1;
+}
+
+.section-testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.section-testimonial-avatar {
+    width: 40px;
+    height: 40px;
+    max-width: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.section-testimonial-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.section-testimonial-info {
+    flex: 1;
+}
+
+.section-testimonial-name {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #0A0A0A;
+    margin-bottom: 2px;
+    line-height: normal;
+}
+
+.section-testimonial-verified {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.section-testimonial-verified img {
+    width: 16px;
+    height: 16px;
+}
+
+.section-testimonial-verified-text {
+    font-family: 'Figtree', sans-serif;
+    font-size: 12px;
+    color: #4CAF50;
+    line-height: normal;
+}
+
+@media (max-width: 768px) {
+    .section-testimonials {
+        padding: 17px 15px;
+    }
+    
+    .section-testimonials-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+</style>
+
+<div class="section-testimonials">
+    <div class="section-testimonials-title" id="section-testimonials-title">
+        Loading...
+    </div>
+    
+    <div class="section-testimonials-container" id="section-testimonials-container">
+        <!-- Testimonials will be dynamically inserted here -->
+    </div>
+</div>
+
+<script>
+(function() {
+    // Get page-name from pageConfig (defined in the parent HTML)
+    const pageName = (typeof pageConfig !== 'undefined' && pageConfig['page-name']) 
+        ? pageConfig['page-name'] 
+        : 'index';
+    
+    // Get the base path from the current script location
+    const scriptPath = document.currentScript ? document.currentScript.src : '';
+    const basePath = scriptPath ? scriptPath.substring(0, scriptPath.lastIndexOf('/')) : '';
+    const jsonPath = basePath 
+        ? `${basePath}/page-content/${pageName}.json` 
+        : `html-includes/page-content/${pageName}.json`;
+    
+    (async function() {
+        // Get the dataKey from the container's data attribute
+        const container = document.currentScript ? document.currentScript.closest('.component-container') : null;
+        const dataKey = container ? container.getAttribute('data-key') : 'section-testimonials';
+        
+        // Find elements within this specific container instance
+        const sectionDiv = container ? container.querySelector('.section-testimonials') : null;
+        
+        try {
+            const response = await fetch(jsonPath);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch JSON: ${jsonPath}`);
+            }
+            const data = await response.json();
+            const sectionData = data[dataKey];
+            
+            if (sectionDiv) {
+                const title = sectionDiv.querySelector('#section-testimonials-title');
+                const testimonialsContainer = sectionDiv.querySelector('#section-testimonials-container');
+                
+                if (sectionData) {
+                    // Set background color (default: #ffffff)
+                    const bgColor = sectionData['bg-color'] || '#ffffff';
+                    sectionDiv.style.backgroundColor = bgColor;
+                    
+                    // Set title
+                    if (title && sectionData.title) {
+                        title.innerHTML = sectionData.title;
+                    }
+                    
+                    // Render testimonials
+                    if (testimonialsContainer && sectionData.testimonials && Array.isArray(sectionData.testimonials)) {
+                        testimonialsContainer.innerHTML = sectionData.testimonials.map((testimonial, index) => {
+                            const stars = testimonial.rating ? Array(testimonial.rating).fill(0).map(() => 
+                                '★'
+                            ).join('') : '';
+                            
+                            return `
+                                <div class="section-testimonial-card">
+                                    ${stars ? `<div class="section-testimonial-stars">${stars}</div>` : ''}
+                                    <div class="section-testimonial-text">${testimonial.text}</div>
+                                    <div class="section-testimonial-author">
+                                        ${testimonial.avatar ? `
+                                            <div class="section-testimonial-avatar">
+                                                <img src="${testimonial.avatar}" alt="${testimonial.name}">
+                                            </div>
+                                        ` : ''}
+                                        <div class="section-testimonial-info">
+                                            <div class="section-testimonial-name">${testimonial.name}</div>
+                                            ${testimonial.verified !== false ? `
+                                                <div class="section-testimonial-verified">
+                                                    <img src="images/6646baa88eb3ba034c44a00b 1.png" alt="Verified">
+                                                    <span class="section-testimonial-verified-text">Verified Buyer</span>
+                                                </div>
+                                            ` : ''}
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error loading section testimonials content:', error);
+            console.error(`Tried to load: ${jsonPath}`);
+        }
+    })();
+})();
+</script>
+

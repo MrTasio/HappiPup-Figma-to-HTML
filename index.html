@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happi Pup - Article</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Figtree', sans-serif;
+            background-color: #ffffff;
+            color: #0A0A0A;
+            font-size: 18px;
+            line-height: 30px;
+        }
+
+        /* Component containers */
+        .component-container {
+            width: 100%;
+        }
+
+        .component-container.full-width {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Component containers will be dynamically created here -->
+    <div id="components-root"></div>
+
+    <script>
+        // Page configuration - defines which components to include
+        // 
+        // To reuse a section with different content:
+        // 1. Add a new entry in the JSON file with a different key (e.g., "section-4-variant")
+        // 2. Add the component again in the components array with:
+        //    - Same "name" (the HTML file to use)
+        //    - Unique "containerId" 
+        //    - "dataKey" pointing to your JSON key
+        // 
+        // Example:
+        // {
+        //     "name": "section-4",
+        //     "containerId": "section-4-variant-container",
+        //     "containerClass": "",
+        //     "dataKey": "section-4-variant"
+        // }
+        const pageConfig = {
+            "page-name": "index",
+            "components": [
+                {
+                    "name": "banner",
+                    "containerId": "banner-container",
+                    "containerClass": "full-width"
+                },
+                {
+                    "name": "hero",
+                    "containerId": "hero-container",
+                    "containerClass": ""
+                },
+                {
+                    "name": "section-1",
+                    "containerId": "section-1-container",
+                    "containerClass": "",
+                    "dataKey": "section-1"
+                },
+                {
+                    "name": "section-2",
+                    "containerId": "section-2-container",
+                    "containerClass": "",
+                    "dataKey": "section-2"
+                },
+                {
+                    "name": "section-3",
+                    "containerId": "section-3-container",
+                    "containerClass": "",
+                    "dataKey": "section-3"
+                },
+                {
+                    "name": "section-4",
+                    "containerId": "section-4-container",
+                    "containerClass": "",
+                    "dataKey": "section-4"
+                },
+                {
+                    "name": "section-4",
+                    "containerId": "section-5-container",
+                    "containerClass": "",
+                    "dataKey": "section-5"
+                },
+                {
+                    "name": "section-4",
+                    "containerId": "section-6-container",
+                    "containerClass": "",
+                    "dataKey": "section-6"
+                },
+                {
+                    "name": "section-3",
+                    "containerId": "section-7-container",
+                    "containerClass": "",
+                    "dataKey": "section-7"
+                },
+                {
+                    "name": "section-4",
+                    "containerId": "section-8-container",
+                    "containerClass": "",
+                    "dataKey": "section-8"
+                },
+                {
+                    "name": "section-4",
+                    "containerId": "section-9-container",
+                    "containerClass": "",
+                    "dataKey": "section-9"
+                },
+                {
+                    "name": "section-4",
+                    "containerId": "section-10-container",
+                    "containerClass": "",
+                    "dataKey": "section-10"
+                },
+                {
+                    "name": "section-4",
+                    "containerId": "section-11-container",
+                    "containerClass": "",
+                    "dataKey": "section-11"
+                },
+                {
+                    "name": "section-cards",
+                    "containerId": "section-12-container",
+                    "containerClass": "",
+                    "dataKey": "section-12"
+                },
+                {
+                    "name": "section-transformation",
+                    "containerId": "section-13-container",
+                    "containerClass": "",
+                    "dataKey": "section-13"
+                },
+                {
+                    "name": "section-4",
+                    "containerId": "section-14-container",
+                    "containerClass": "",
+                    "dataKey": "section-14"
+                },
+                {
+                    "name": "section-4",
+                    "containerId": "section-15-container",
+                    "containerClass": "",
+                    "dataKey": "section-15"
+                },
+                {
+                    "name": "section-4",
+                    "containerId": "section-15b-container",
+                    "containerClass": "",
+                    "dataKey": "section-15b"
+                },
+                {
+                    "name": "section-product",
+                    "containerId": "section-16-container",
+                    "containerClass": "",
+                    "dataKey": "section-16"
+                },
+                {
+                    "name": "section-testimonials",
+                    "containerId": "section-17-container",
+                    "containerClass": "",
+                    "dataKey": "section-17"
+                },
+                {
+                    "name": "section-how-it-works",
+                    "containerId": "section-18-container",
+                    "containerClass": "",
+                    "dataKey": "section-18"
+                },
+                {
+                    "name": "section-offer",
+                    "containerId": "section-19-container",
+                    "containerClass": "",
+                    "dataKey": "section-19"
+                },
+                {
+                    "name": "section-guarantee",
+                    "containerId": "section-20-container",
+                    "containerClass": "",
+                    "dataKey": "section-20"
+                },
+                {
+                    "name": "section-image",
+                    "containerId": "section-21-container",
+                    "containerClass": "",
+                    "dataKey": "section-21"
+                },
+                {
+                    "name": "section-faq",
+                    "containerId": "section-22-container",
+                    "containerClass": "",
+                    "dataKey": "section-22"
+                },
+                {
+                    "name": "section-final-offer",
+                    "containerId": "section-23-container",
+                    "containerClass": "",
+                    "dataKey": "section-23"
+                },
+                {
+                    "name": "section-closing",
+                    "containerId": "section-24-container",
+                    "containerClass": "",
+                    "dataKey": "section-24"
+                },
+                {
+                    "name": "footer",
+                    "containerId": "footer-container",
+                    "containerClass": "",
+                    "dataKey": "footer"
+                }
+            ]
+        };
+    </script>
+    <script src="index.js"></script>
+</body>
+</html>

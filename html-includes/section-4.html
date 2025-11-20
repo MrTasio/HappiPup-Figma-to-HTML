@@ -1,0 +1,281 @@
+<!-- Section 4 Component -->
+<style>
+.section-4 {
+    padding: 17px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    /* background-color will be set dynamically via JavaScript, default: #ffffff */
+}
+
+.section-4-headline {
+    margin-bottom: 30px;
+    /* text-align will be set dynamically via JavaScript */
+}
+
+.section-4-headline h2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 30px;
+    margin: 0;
+    color: #300146;
+}
+
+.section-4-headline .headline-part1 {
+    color: #300146;
+    display: block;
+}
+
+.section-4-headline .headline-part2 {
+    color: #E32875;
+    display: block;
+}
+
+.section-4-image {
+    width: 100%;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.section-4-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    display: block;
+}
+
+.section-4-content {
+    font-family: 'Figtree', sans-serif;
+    font-size: 18px;
+    line-height: 30px;
+    color: #0A0A0A;
+}
+
+.section-4-content p {
+    margin-bottom: 30px;
+}
+
+.section-4-content h2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 30px;
+    margin: 0 0 30px 0;
+    color: #300146;
+    text-align: left;
+}
+
+.section-4-content .quote-box {
+    background-color: #FFF5F8;
+    border-left: 4px solid #E32875;
+    padding: 20px;
+    margin: 30px 0;
+    font-style: italic;
+    font-weight: 700;
+}
+
+.section-4-content .checkmark-list-box {
+    background-color: #FFF5F8;
+    padding: 20px;
+    margin: 30px 0;
+    list-style: none;
+}
+
+.section-4-content .checkmark-list-box li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.section-4-content .checkmark-list-box li:last-child {
+    margin-bottom: 0;
+}
+
+.section-4-content .checkmark-list-box li img {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.section-4-content .checkmark-list-box li span {
+    flex: 1;
+}
+
+@media (max-width: 768px) {
+    .section-4 {
+        padding: 17px 15px;
+    }
+    
+    .section-4-headline h2 {
+        font-size: 26px;
+    }
+    
+    .section-4-content {
+        font-size: 18px;
+    }
+}
+</style>
+
+<div class="section-4">
+    <div class="section-4-headline" id="section-4-headline">
+        <h2>
+            <span class="headline-part1" id="section-4-headline-part1">Loading...</span>
+            <span class="headline-part2" id="section-4-headline-part2"></span>
+        </h2>
+    </div>
+    
+    <div class="section-4-image">
+        <img src="" alt="Section Image" id="section-4-image-img">
+    </div>
+    
+    <div class="section-4-content" id="section-4-content">
+        Loading...
+    </div>
+</div>
+
+<script>
+(function() {
+    // Get page-name from pageConfig (defined in the parent HTML)
+    const pageName = (typeof pageConfig !== 'undefined' && pageConfig['page-name']) 
+        ? pageConfig['page-name'] 
+        : 'index';
+    
+    // Get the base path from the current script location
+    const scriptPath = document.currentScript ? document.currentScript.src : '';
+    const basePath = scriptPath ? scriptPath.substring(0, scriptPath.lastIndexOf('/')) : '';
+    const jsonPath = basePath 
+        ? `${basePath}/page-content/${pageName}.json` 
+        : `html-includes/page-content/${pageName}.json`;
+    
+    (async function() {
+        // Get the dataKey from the container's data attribute
+        const container = document.currentScript ? document.currentScript.closest('.component-container') : null;
+        const dataKey = container ? container.getAttribute('data-key') : 'section-4';
+        
+        // Find elements within this specific container instance
+        const sectionDiv = container ? container.querySelector('.section-4') : null;
+        
+        try {
+            const response = await fetch(jsonPath);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch JSON: ${jsonPath}`);
+            }
+            const data = await response.json();
+            const sectionData = data[dataKey];
+            
+            if (sectionDiv) {
+                const headlinePart1 = sectionDiv.querySelector('#section-4-headline-part1');
+                const headlinePart2 = sectionDiv.querySelector('#section-4-headline-part2');
+                const headlineContainer = sectionDiv.querySelector('#section-4-headline');
+                const image = sectionDiv.querySelector('#section-4-image-img');
+                const content = sectionDiv.querySelector('#section-4-content');
+                
+                if (sectionData) {
+                    // Set background color (default: #ffffff)
+                    if (sectionDiv) {
+                        const bgColor = sectionData['bg-color'] || '#ffffff';
+                        sectionDiv.style.backgroundColor = bgColor;
+                    }
+                    
+                    // Handle empty headline - hide the container
+                    if (headlineContainer) {
+                        const hasHeadline = sectionData.headline && sectionData.headline.trim() !== '';
+                        const hasPart1 = sectionData['headline-part1'] && sectionData['headline-part1'].trim() !== '';
+                        const hasPart2 = sectionData['headline-part2'] && sectionData['headline-part2'].trim() !== '';
+                        
+                        if (!hasHeadline && !hasPart1 && !hasPart2) {
+                            // Hide headline container if all headlines are empty
+                            headlineContainer.style.display = 'none';
+                        } else {
+                            headlineContainer.style.display = 'block';
+                            // Set headline alignment (default: center)
+                            const align = sectionData['headline-align'] || 'center';
+                            headlineContainer.style.textAlign = align;
+                            
+                            // Support both single headline and two-part headline
+                            if (hasHeadline) {
+                                // Single headline - replace the entire h2 content
+                                headlineContainer.querySelector('h2').innerHTML = sectionData.headline;
+                            } else {
+                                // Two-part headline
+                                if (headlinePart1 && hasPart1) {
+                                    headlinePart1.innerHTML = sectionData['headline-part1'];
+                                } else if (headlinePart1) {
+                                    headlinePart1.innerHTML = '';
+                                }
+                                if (headlinePart2 && hasPart2) {
+                                    headlinePart2.innerHTML = sectionData['headline-part2'];
+                                } else if (headlinePart2) {
+                                    headlinePart2.innerHTML = '';
+                                }
+                            }
+                        }
+                    }
+                    // Handle image - hide container if no image provided
+                    const imageContainer = sectionDiv.querySelector('.section-4-image');
+                    if (image && sectionData.image) {
+                        image.src = sectionData.image;
+                        // Apply max-width if specified
+                        if (sectionData['image-max-width']) {
+                            image.style.maxWidth = sectionData['image-max-width'] + 'px';
+                        }
+                        if (imageContainer) {
+                            imageContainer.style.display = 'flex';
+                        }
+                    } else {
+                        // Hide image container if no image
+                        if (imageContainer) {
+                            imageContainer.style.display = 'none';
+                        }
+                    }
+                    if (content && sectionData.content) {
+                        content.innerHTML = sectionData.content;
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error loading section 4 content:', error);
+            console.error(`Tried to load: ${jsonPath}`);
+            // Fallback content
+            if (sectionDiv) {
+                const headlineContainer = sectionDiv.querySelector('#section-4-headline');
+                const headlinePart1 = sectionDiv.querySelector('#section-4-headline-part1');
+                const headlinePart2 = sectionDiv.querySelector('#section-4-headline-part2');
+                const image = sectionDiv.querySelector('#section-4-image-img');
+                const content = sectionDiv.querySelector('#section-4-content');
+                
+                // Default alignment to center
+                if (headlineContainer) {
+                    headlineContainer.style.textAlign = 'center';
+                }
+                
+                // Default fallback uses two-part headline
+                if (headlinePart1) {
+                    headlinePart1.innerHTML = 'Before I Stumbled Onto This';
+                }
+                if (headlinePart2) {
+                    headlinePart2.innerHTML = 'Game-Changing Discovery...';
+                }
+                const imageContainer = sectionDiv.querySelector('.section-4-image');
+                if (image) {
+                    image.src = 'images/Stubborn doggy 1.png';
+                    if (imageContainer) {
+                        imageContainer.style.display = 'block';
+                    }
+                } else {
+                    if (imageContainer) {
+                        imageContainer.style.display = 'none';
+                    }
+                }
+                if (content) {
+                    content.innerHTML = '<p>I was a desperate dog owner on the verge of giving up entirely.</p><p>The painful irony? As a veterinarian with years of clinical experience, I thought I had all the answers.</p><p>I\'d been treating anxious dogs for years...</p><p>...using the conventional medications and behavior protocols I learned in vet school. Other dog owners came to me seeking my expertise and guidance.</p><p>Yet...</p><p>...with my own dog, absolutely nothing worked.</p><p><b>It was honestly embarrassing.</b></p><p>Here I was, with my veterinary diploma hanging proudly in my clinic, completely unable to help my own pet.</p><p>Honestly, I felt like a failure every time a client asked for help with their anxious dog..</p><p>...while knowing Bailey was at home destroying my house.</p>';
+                }
+            }
+        }
+    })();
+})();
+</script>
+

@@ -1,0 +1,151 @@
+<!-- Section 1 Component -->
+<style>
+.section-1 {
+    padding: 17px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #ffffff;
+}
+
+.section-1-image {
+    width: 100%;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.section-1-image img {
+    max-width: 298px;
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    display: block;
+}
+
+.section-1-content {
+    font-family: 'Figtree', sans-serif;
+    font-size: 18px;
+    line-height: 30px;
+    color: #0A0A0A;
+}
+
+.section-1-content p {
+    margin-bottom: 30px;
+}
+
+.section-1-content .section-heading {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+.section-1-content .section-list {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0 20px 0;
+}
+
+.section-1-content .section-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.section-1-content .section-list li img {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.section-1-content .highlight {
+    color: #E32875;
+}
+
+@media (max-width: 768px) {
+    .section-1 {
+        padding: 17px 15px;
+    }
+    
+    .section-1-content {
+        font-size: 18px;
+    }
+}
+</style>
+
+<div class="section-1">
+    <div class="section-1-image">
+        <img src="" alt="Section Image" id="section-1-image-img">
+    </div>
+    
+    <div class="section-1-content" id="section-1-content">
+        Loading...
+    </div>
+</div>
+
+<script>
+(function() {
+    // Get page-name from pageConfig (defined in the parent HTML)
+    const pageName = (typeof pageConfig !== 'undefined' && pageConfig['page-name']) 
+        ? pageConfig['page-name'] 
+        : 'index';
+    
+    // Get the base path from the current script location
+    const scriptPath = document.currentScript ? document.currentScript.src : '';
+    const basePath = scriptPath ? scriptPath.substring(0, scriptPath.lastIndexOf('/')) : '';
+    const jsonPath = basePath 
+        ? `${basePath}/page-content/${pageName}.json` 
+        : `html-includes/page-content/${pageName}.json`;
+    
+    (async function() {
+        // Get the dataKey from the container's data attribute
+        const container = document.currentScript ? document.currentScript.closest('.component-container') : null;
+        const dataKey = container ? container.getAttribute('data-key') : 'section-1';
+        
+        // Find elements within this specific container instance
+        const sectionDiv = container ? container.querySelector('.section-1') : null;
+        
+        try {
+            const response = await fetch(jsonPath);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch JSON: ${jsonPath}`);
+            }
+            const data = await response.json();
+            const sectionData = data[dataKey];
+            
+            if (sectionDiv) {
+                const image = sectionDiv.querySelector('#section-1-image-img');
+                const content = sectionDiv.querySelector('#section-1-content');
+                
+                if (sectionData) {
+                    if (image && sectionData.image) {
+                        image.src = sectionData.image;
+                    }
+                    if (content && sectionData.content) {
+                        content.innerHTML = sectionData.content;
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error loading section 1 content:', error);
+            console.error(`Tried to load: ${jsonPath}`);
+            // Fallback content
+            if (sectionDiv) {
+                const image = sectionDiv.querySelector('#section-1-image-img');
+                const content = sectionDiv.querySelector('#section-1-content');
+                
+                if (image) {
+                    image.src = 'images/emily gold2eee2 1.png';
+                }
+                if (content) {
+                    content.innerHTML = '<p>Hi, I\'m Emily Patterson...a veterinarian and proud mom to Bailey, my formerly impossible-to-manage golden retriever.</p><p>In just the next 4 minutes, I\'ll share something with you that works even if you\'re convinced your dog\'s problems are \'permanent\'...</p><p class="section-heading">Even if you\'ve already invested in:</p><ul class="section-list"><li><img src="images/5610944 (2) 1.png" alt="Checkmark"><span>High-priced dog trainers who couldn\'t deliver results</span></li><li><img src="images/5610944 (2) 1.png" alt="Checkmark"><span>Anxiety vests and calming collars</span></li><li><img src="images/5610944 (2) 1.png" alt="Checkmark"><span>Every training method you could find online</span></li><li><img src="images/5610944 (2) 1.png" alt="Checkmark"><span>And you\'re certain medication is your last resort</span></li></ul><p>I\'ve discovered a proven approach that addresses what\'s really causing your dog\'s \'difficult behaviors.\'</p>';
+                }
+            }
+        }
+    })();
+})();
+</script>
+

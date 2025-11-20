@@ -1,0 +1,200 @@
+<!-- Section Product Component -->
+<style>
+.section-product {
+    padding: 17px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    /* background-color will be set dynamically via JavaScript, default: #ffffff */
+}
+
+.section-product-card {
+    background-color: #fff;
+    border: 2px solid #E32875;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 8px 0 rgba(10, 10, 10, 0.5);
+}
+
+.section-product-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #E32875;
+    text-align: center;
+    margin-bottom: 30px;
+    line-height: 30px;
+}
+
+.section-product-image {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.section-product-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    display: block;
+}
+
+.section-product-section {
+    margin-bottom: 30px;
+}
+
+.section-product-section-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #300146;
+    margin-bottom: 15px;
+    /* text-align will be set dynamically via JavaScript */
+}
+
+.section-product-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.section-product-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+    font-family: 'Figtree', sans-serif;
+    font-size: 18px;
+    line-height: 30px;
+    color: #0A0A0A;
+}
+
+.section-product-list li:last-child {
+    margin-bottom: 0;
+}
+
+.section-product-list li img {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    margin-top: 6px;
+}
+
+.section-product-list li span {
+    flex: 1;
+}
+
+@media (max-width: 768px) {
+    .section-product {
+        padding: 17px 15px;
+    }
+    
+    .section-product-card {
+        padding: 20px;
+    }
+    
+    .section-product-title {
+        font-size: 22px;
+    }
+}
+</style>
+
+<div class="section-product">
+    <div class="section-product-card">
+        <div class="section-product-title" id="section-product-title">
+            Loading...
+        </div>
+        
+        <div class="section-product-image" id="section-product-image">
+            <!-- Image will be dynamically inserted here -->
+        </div>
+        
+        <div id="section-product-content">
+            <!-- Content sections will be dynamically inserted here -->
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    // Get page-name from pageConfig (defined in the parent HTML)
+    const pageName = (typeof pageConfig !== 'undefined' && pageConfig['page-name']) 
+        ? pageConfig['page-name'] 
+        : 'index';
+    
+    // Get the base path from the current script location
+    const scriptPath = document.currentScript ? document.currentScript.src : '';
+    const basePath = scriptPath ? scriptPath.substring(0, scriptPath.lastIndexOf('/')) : '';
+    const jsonPath = basePath 
+        ? `${basePath}/page-content/${pageName}.json` 
+        : `html-includes/page-content/${pageName}.json`;
+    
+    (async function() {
+        // Get the dataKey from the container's data attribute
+        const container = document.currentScript ? document.currentScript.closest('.component-container') : null;
+        const dataKey = container ? container.getAttribute('data-key') : 'section-product';
+        
+        // Find elements within this specific container instance
+        const wrapperDiv = container ? container.querySelector('.section-product') : null;
+        const cardDiv = container ? container.querySelector('.section-product-card') : null;
+        
+        try {
+            const response = await fetch(jsonPath);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch JSON: ${jsonPath}`);
+            }
+            const data = await response.json();
+            const sectionData = data[dataKey];
+            
+            if (wrapperDiv && cardDiv) {
+                // Set background color on wrapper (default: #ffffff)
+                const bgColor = sectionData['bg-color'] || '#ffffff';
+                wrapperDiv.style.backgroundColor = bgColor;
+                
+                const title = cardDiv.querySelector('#section-product-title');
+                const imageContainer = cardDiv.querySelector('#section-product-image');
+                const contentContainer = cardDiv.querySelector('#section-product-content');
+                
+                if (sectionData) {
+                    // Set title
+                    if (title && sectionData.title) {
+                        title.innerHTML = sectionData.title;
+                    }
+                    
+                    // Set image
+                    if (imageContainer && sectionData.image) {
+                        const maxWidth = sectionData['image-max-width'] ? sectionData['image-max-width'] + 'px' : '100%';
+                        imageContainer.innerHTML = `<img src="${sectionData.image}" alt="Product" style="max-width: ${maxWidth}">`;
+                    } else if (imageContainer) {
+                        imageContainer.style.display = 'none';
+                    }
+                    
+                    // Set content sections
+                    if (contentContainer && sectionData.sections && Array.isArray(sectionData.sections)) {
+                        contentContainer.innerHTML = sectionData.sections.map(section => {
+                            const listItems = section.items && Array.isArray(section.items)
+                                ? section.items.map(item => 
+                                    `<li><img src="images/${section.iconType === 'cross' ? 'ref cross 1.png' : '5610944 (2) 1.png'}" alt="${section.iconType === 'cross' ? 'X' : 'Checkmark'}"><span>${item}</span></li>`
+                                ).join('')
+                                : '';
+                            
+                            const titleAlign = section['title-align'] || 'center';
+                            
+                            return `
+                                <div class="section-product-section">
+                                    ${section.title ? `<div class="section-product-section-title" style="text-align: ${titleAlign}">${section.title}</div>` : ''}
+                                    ${listItems ? `<ul class="section-product-list">${listItems}</ul>` : ''}
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error loading section product content:', error);
+            console.error(`Tried to load: ${jsonPath}`);
+        }
+    })();
+})();
+</script>
+

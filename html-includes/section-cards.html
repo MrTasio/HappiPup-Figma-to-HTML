@@ -1,0 +1,296 @@
+<!-- Section Cards Component -->
+<style>
+.section-cards {
+    padding: 17px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    /* background-color will be set dynamically via JavaScript, default: #ffffff */
+}
+
+.section-cards-headline {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.section-cards-headline h2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 30px;
+    margin: 0;
+    color: #300146;
+}
+
+.section-cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 35px;
+    margin-top: 30px;
+}
+
+.section-cards-footer {
+    margin-top: 40px;
+}
+
+.section-cards-footer-heading {
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #300146;
+    margin-bottom: 20px;
+    text-align: left;
+    line-height: 30px;
+}
+
+.section-cards-footer-text {
+    font-family: 'Figtree', sans-serif;
+    font-size: 18px;
+    line-height: 30px;
+    color: #0A0A0A;
+    text-align: left;
+}
+
+.section-card {
+    background-color: #ffffff;
+    border: 2px solid #E32875;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 8px 0 rgba(10, 10, 10, 0.5);
+}
+
+.section-card-header {
+    margin-bottom: 0;
+}
+
+.section-card-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #300146;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.section-card-headline {
+    font-family: 'Poppins', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #E32875;
+    margin-bottom: 15px;
+    line-height: 30px;
+    text-align: center;
+}
+
+.section-card-subtitle {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #300146;
+    margin-bottom: 15px;
+    display: none; /* Hide subtitle as it's now part of headline */
+}
+
+.section-card-intro {
+    font-family: 'Figtree', sans-serif;
+    font-size: 16px;
+    line-height: 24px;
+    color: #0A0A0A;
+    margin-bottom: 0;
+}
+
+.section-card-image {
+    width: 100%;
+    margin: 20px 0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.section-card-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.section-card-benefits {
+    margin-top: 0;
+}
+
+.section-card-benefits-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #300146;
+    margin-bottom: 15px;
+}
+
+.section-card-benefits-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.section-card-benefits-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+    font-family: 'Figtree', sans-serif;
+    font-size: 16px;
+    line-height: 24px;
+    color: #0A0A0A;
+}
+
+.section-card-benefits-list li:last-child {
+    margin-bottom: 0;
+}
+
+.section-card-benefits-list li img {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+@media (max-width: 768px) {
+    .section-cards {
+        padding: 17px 15px;
+    }
+    
+    .section-cards-container {
+        grid-template-columns: 1fr;
+        gap: 35px;
+    }
+    
+    .section-card-headline {
+        font-size: 22px;
+    }
+}
+</style>
+
+<div class="section-cards">
+    <div class="section-cards-headline" id="section-cards-headline">
+        <h2>Loading...</h2>
+    </div>
+    
+    <div class="section-cards-container" id="section-cards-container">
+        <!-- Cards will be dynamically inserted here -->
+    </div>
+    
+    <div class="section-cards-footer" id="section-cards-footer">
+        <!-- Footer text will be dynamically inserted here -->
+    </div>
+</div>
+
+<script>
+(function() {
+    // Get page-name from pageConfig (defined in the parent HTML)
+    const pageName = (typeof pageConfig !== 'undefined' && pageConfig['page-name']) 
+        ? pageConfig['page-name'] 
+        : 'index';
+    
+    // Get the base path from the current script location
+    const scriptPath = document.currentScript ? document.currentScript.src : '';
+    const basePath = scriptPath ? scriptPath.substring(0, scriptPath.lastIndexOf('/')) : '';
+    const jsonPath = basePath 
+        ? `${basePath}/page-content/${pageName}.json` 
+        : `html-includes/page-content/${pageName}.json`;
+    
+    (async function() {
+        // Get the dataKey from the container's data attribute
+        const container = document.currentScript ? document.currentScript.closest('.component-container') : null;
+        const dataKey = container ? container.getAttribute('data-key') : 'section-cards';
+        
+        // Find elements within this specific container instance
+        const sectionDiv = container ? container.querySelector('.section-cards') : null;
+        
+        try {
+            const response = await fetch(jsonPath);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch JSON: ${jsonPath}`);
+            }
+            const data = await response.json();
+            const sectionData = data[dataKey];
+            
+            if (sectionDiv) {
+                const headline = sectionDiv.querySelector('#section-cards-headline');
+                const cardsContainer = sectionDiv.querySelector('#section-cards-container');
+                const footer = sectionDiv.querySelector('#section-cards-footer');
+                
+                if (sectionData) {
+                    // Set background color (default: #ffffff)
+                    const bgColor = sectionData['bg-color'] || '#ffffff';
+                    sectionDiv.style.backgroundColor = bgColor;
+                    
+                    // Set headline
+                    if (headline && sectionData.headline) {
+                        headline.querySelector('h2').innerHTML = sectionData.headline;
+                    } else if (headline && sectionData.headline === '') {
+                        headline.style.display = 'none';
+                    }
+                    
+                    // Render cards
+                    if (cardsContainer && sectionData.cards && Array.isArray(sectionData.cards)) {
+                        cardsContainer.innerHTML = sectionData.cards.map((card, index) => {
+                            const benefitsList = card.benefits && Array.isArray(card.benefits)
+                                ? card.benefits.map(benefit => 
+                                    `<li><img src="images/5610944 (2) 1.png" alt="Checkmark"><span>${benefit}</span></li>`
+                                ).join('')
+                                : '';
+                            
+                            return `
+                                <div class="section-card">
+                                    <div class="section-card-header">
+                                        ${card.title ? `<div class="section-card-title">${card.title}</div>` : ''}
+                                        ${card.headline ? `<div class="section-card-headline">${card.headline}</div>` : ''}
+                                        ${card.intro ? `<div class="section-card-intro">${card.intro}</div>` : ''}
+                                    </div>
+                                    ${card.image ? `<div class="section-card-image"><img src="${card.image}" alt="${card.headline || 'Card Image'}"></div>` : ''}
+                                    ${benefitsList ? `
+                                        <div class="section-card-benefits">
+                                            ${card.benefitsTitle ? `<div class="section-card-benefits-title">${card.benefitsTitle}</div>` : ''}
+                                            <ul class="section-card-benefits-list">${benefitsList}</ul>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                    
+                    // Render footer text
+                    if (footer && sectionData.footer) {
+                        const footerHeading = sectionData.footer.heading || '';
+                        const footerText = sectionData.footer.text || '';
+                        
+                        if (footerHeading || footerText) {
+                            footer.innerHTML = `
+                                ${footerHeading ? `<div class="section-cards-footer-heading">${footerHeading}</div>` : ''}
+                                ${footerText ? `<div class="section-cards-footer-text">${footerText}</div>` : ''}
+                            `;
+                        } else {
+                            footer.style.display = 'none';
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error loading section cards content:', error);
+            console.error(`Tried to load: ${jsonPath}`);
+            // Fallback content
+            if (sectionDiv) {
+                const headline = sectionDiv.querySelector('#section-cards-headline');
+                const cardsContainer = sectionDiv.querySelector('#section-cards-container');
+                
+                if (headline) {
+                    headline.querySelector('h2').innerHTML = 'Neurological Triggers';
+                }
+                if (cardsContainer) {
+                    cardsContainer.innerHTML = '<div class="section-card"><div class="section-card-header"><div class="section-card-title">Neurological Trigger #1:</div><div class="section-card-headline">Brainwave Balancing</div><div class="section-card-subtitle">(432-638 Hz)</div></div></div>';
+                }
+            }
+        }
+    })();
+})();
+</script>
+

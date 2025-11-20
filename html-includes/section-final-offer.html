@@ -1,0 +1,318 @@
+<!-- Section Final Offer Component -->
+<style>
+.section-final-offer {
+    padding: 17px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    /* background-color will be set dynamically via JavaScript, default: #ffffff */
+}
+
+.section-final-offer-wrapper {
+    border: 2px dashed #E32875;
+    border-radius: 12px;
+    padding: 30px;
+    background-color: #ffffff;
+}
+
+.section-final-offer-headline {
+    font-family: 'Poppins', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 40px;
+    color: #5C1E6B;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.section-final-offer-image {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.section-final-offer-image img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.section-final-offer-discount-text {
+    font-family: 'Figtree', sans-serif;
+    font-size: 18px;
+    line-height: 30px;
+    color: #E32875;
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+.section-final-offer-benefits {
+    background-color: #FFF5F8;
+    padding: 25px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.section-final-offer-benefits-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #5C1E6B;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.section-final-offer-benefits-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.section-final-offer-benefits-list li {
+    font-family: 'Figtree', sans-serif;
+    font-size: 18px;
+    line-height: 30px;
+    color: #0A0A0A;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.section-final-offer-benefits-list li:last-child {
+    margin-bottom: 0;
+}
+
+.section-final-offer-benefits-list li img {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    margin-top: 5px;
+    flex-shrink: 0;
+}
+
+.section-final-offer-cta {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.section-final-offer-cta-button {
+    background-color: #04B616;
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 13px 50px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    text-transform: uppercase;
+    display: block;
+    transition: background-color 0.3s;
+    line-height: 26px;
+}
+
+.section-final-offer-cta-button:hover {
+    background-color: #218838;
+}
+
+.section-final-offer-pricing {
+    text-align: center;
+    font-family: 'Figtree', sans-serif;
+    font-size: 16px;
+    line-height: 24px;
+    color: #0A0A0A;
+}
+
+.section-final-offer-pricing .regular-price {
+    color: #0A0A0A;
+}
+
+.section-final-offer-pricing .regular-price .strikethrough {
+    text-decoration: line-through;
+}
+
+.section-final-offer-pricing .savings {
+    color: #DC3545;
+    font-weight: 700;
+}
+
+@media (max-width: 768px) {
+    .section-final-offer {
+        padding: 17px 15px;
+    }
+    
+    .section-final-offer-wrapper {
+        padding: 20px;
+    }
+    
+    .section-final-offer-headline {
+        font-size: 26px;
+        line-height: 32px;
+    }
+    
+    .section-final-offer-benefits {
+        padding: 20px;
+    }
+    
+    .section-final-offer-benefits-title {
+        font-size: 20px;
+    }
+}
+</style>
+
+<div class="section-final-offer">
+    <div class="section-final-offer-wrapper">
+        <div class="section-final-offer-headline" id="section-final-offer-headline">
+            Loading...
+        </div>
+        
+        <div class="section-final-offer-image" id="section-final-offer-image">
+            <!-- Image will be dynamically inserted here -->
+        </div>
+        
+        <div class="section-final-offer-discount-text" id="section-final-offer-discount-text">
+            Loading...
+        </div>
+        
+        <div class="section-final-offer-benefits">
+            <div class="section-final-offer-benefits-title" id="section-final-offer-benefits-title">
+                Loading...
+            </div>
+            
+            <ul class="section-final-offer-benefits-list" id="section-final-offer-benefits-list">
+                <!-- Benefits will be dynamically inserted here -->
+            </ul>
+        </div>
+        
+        <div class="section-final-offer-cta" id="section-final-offer-cta">
+            <!-- CTA button will be dynamically inserted here -->
+        </div>
+        
+        <div class="section-final-offer-pricing" id="section-final-offer-pricing">
+            <!-- Pricing will be dynamically inserted here -->
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    // Get page-name from pageConfig (defined in the parent HTML)
+    const pageName = (typeof pageConfig !== 'undefined' && pageConfig['page-name']) 
+        ? pageConfig['page-name'] 
+        : 'index';
+    
+    // Get the base path from the current script location
+    const scriptPath = document.currentScript ? document.currentScript.src : '';
+    const basePath = scriptPath ? scriptPath.substring(0, scriptPath.lastIndexOf('/')) : '';
+    const jsonPath = basePath 
+        ? `${basePath}/page-content/${pageName}.json` 
+        : `html-includes/page-content/${pageName}.json`;
+    
+    (async function() {
+        // Get the dataKey from the container's data attribute
+        const container = document.currentScript ? document.currentScript.closest('.component-container') : null;
+        const dataKey = container ? container.getAttribute('data-key') : 'section-final-offer';
+        
+        // Find elements within this specific container instance
+        const sectionDiv = container ? container.querySelector('.section-final-offer') : null;
+        
+        try {
+            const response = await fetch(jsonPath);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch JSON: ${jsonPath}`);
+            }
+            const data = await response.json();
+            const sectionData = data[dataKey];
+            
+            if (sectionDiv) {
+                const headline = sectionDiv.querySelector('#section-final-offer-headline');
+                const image = sectionDiv.querySelector('#section-final-offer-image');
+                const discountText = sectionDiv.querySelector('#section-final-offer-discount-text');
+                const benefitsTitle = sectionDiv.querySelector('#section-final-offer-benefits-title');
+                const benefitsList = sectionDiv.querySelector('#section-final-offer-benefits-list');
+                const cta = sectionDiv.querySelector('#section-final-offer-cta');
+                const pricing = sectionDiv.querySelector('#section-final-offer-pricing');
+                
+                if (sectionData) {
+                    // Set background color (default: #ffffff)
+                    const bgColor = sectionData['bg-color'] || '#ffffff';
+                    sectionDiv.style.backgroundColor = bgColor;
+                    
+                    // Set headline
+                    if (headline && sectionData.headline) {
+                        headline.innerHTML = sectionData.headline;
+                    }
+                    
+                    // Set image
+                    if (image && sectionData.image) {
+                        const img = document.createElement('img');
+                        img.src = sectionData.image;
+                        img.alt = sectionData.imageAlt || 'Final offer image';
+                        
+                        if (sectionData['image-max-width']) {
+                            img.style.maxWidth = sectionData['image-max-width'];
+                        }
+                        
+                        image.innerHTML = '';
+                        image.appendChild(img);
+                    } else if (image) {
+                        image.style.display = 'none';
+                    }
+                    
+                    // Set discount text
+                    if (discountText && sectionData.discountText) {
+                        discountText.innerHTML = sectionData.discountText;
+                    }
+                    
+                    // Set benefits title
+                    if (benefitsTitle && sectionData.benefitsTitle) {
+                        benefitsTitle.innerHTML = sectionData.benefitsTitle;
+                    }
+                    
+                    // Set benefits list
+                    if (benefitsList && sectionData.benefits && Array.isArray(sectionData.benefits)) {
+                        benefitsList.innerHTML = '';
+                        sectionData.benefits.forEach(benefit => {
+                            const li = document.createElement('li');
+                            const checkmark = document.createElement('img');
+                            checkmark.src = sectionData.checkmarkImage || 'images/5610944 (2) 1.png';
+                            checkmark.alt = 'Checkmark';
+                            const span = document.createElement('span');
+                            span.innerHTML = benefit;
+                            li.appendChild(checkmark);
+                            li.appendChild(span);
+                            benefitsList.appendChild(li);
+                        });
+                    }
+                    
+                    // Set CTA button
+                    if (cta && sectionData.cta) {
+                        cta.innerHTML = `
+                            <button class="section-final-offer-cta-button" onclick="${sectionData.cta.onclick || 'void(0)'}">${sectionData.cta.text}</button>
+                        `;
+                    }
+                    
+                    // Set pricing
+                    if (pricing && sectionData.pricing) {
+                        pricing.innerHTML = `
+                            <span class="regular-price">Regular Price: <span class="strikethrough">${sectionData.pricing.regularPrice}</span></span> - 
+                            <span class="savings">You Save: ${sectionData.pricing.savings} (${sectionData.pricing.discount} Off)</span>
+                        `;
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error loading section final offer content:', error);
+            console.error(`Tried to load: ${jsonPath}`);
+        }
+    })();
+})();
+</script>
+

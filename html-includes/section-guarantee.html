@@ -1,0 +1,204 @@
+<!-- Section Guarantee Component -->
+<style>
+.section-guarantee {
+    padding: 17px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    /* background-color will be set dynamically via JavaScript, default: #ffffff */
+}
+
+.section-guarantee-badge {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 30px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.section-guarantee-badge img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.section-guarantee-heading {
+    font-family: 'Poppins', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 25px;
+    line-height: 40px;
+}
+
+.section-guarantee-heading .part1 {
+    color: #5C1E6B;
+}
+
+.section-guarantee-heading .part2 {
+    color: #F04E8B;
+}
+
+.section-guarantee-text {
+    font-family: 'Figtree', sans-serif;
+    font-size: 18px;
+    line-height: 30px;
+    color: #0A0A0A;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.section-guarantee-motivational {
+    font-family: 'Figtree', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 30px;
+    color: #0A0A0A;
+    text-align: center;
+    margin: 30px 0;
+}
+
+.section-guarantee-cta-button {
+    background-color: #1EC92F;
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 18px 30px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+    margin: 30px auto;
+    text-transform: uppercase;
+    display: block;
+    transition: background-color 0.3s;
+    line-height: 26px;
+}
+
+.section-guarantee-cta-button:hover {
+    background-color: #1ab828;
+}
+
+@media (max-width: 768px) {
+    .section-guarantee {
+        padding: 17px 15px;
+    }
+    
+    .section-guarantee-heading {
+        font-size: 26px;
+        line-height: 32px;
+    }
+    
+    .section-guarantee-badge {
+        width: 150px;
+        height: 150px;
+    }
+}
+</style>
+
+<div class="section-guarantee">
+    <div class="section-guarantee-badge" id="section-guarantee-badge">
+        <!-- Badge image will be dynamically inserted here -->
+    </div>
+    
+    <div class="section-guarantee-heading" id="section-guarantee-heading">
+        Loading...
+    </div>
+    
+    <div class="section-guarantee-text" id="section-guarantee-text">
+        Loading...
+    </div>
+    
+    <div class="section-guarantee-motivational" id="section-guarantee-motivational">
+        Loading...
+    </div>
+    
+    <div id="section-guarantee-cta">
+        <!-- CTA button will be dynamically inserted here -->
+    </div>
+</div>
+
+<script>
+(function() {
+    // Get page-name from pageConfig (defined in the parent HTML)
+    const pageName = (typeof pageConfig !== 'undefined' && pageConfig['page-name']) 
+        ? pageConfig['page-name'] 
+        : 'index';
+    
+    // Get the base path from the current script location
+    const scriptPath = document.currentScript ? document.currentScript.src : '';
+    const basePath = scriptPath ? scriptPath.substring(0, scriptPath.lastIndexOf('/')) : '';
+    const jsonPath = basePath 
+        ? `${basePath}/page-content/${pageName}.json` 
+        : `html-includes/page-content/${pageName}.json`;
+    
+    (async function() {
+        // Get the dataKey from the container's data attribute
+        const container = document.currentScript ? document.currentScript.closest('.component-container') : null;
+        const dataKey = container ? container.getAttribute('data-key') : 'section-guarantee';
+        
+        // Find elements within this specific container instance
+        const sectionDiv = container ? container.querySelector('.section-guarantee') : null;
+        
+        try {
+            const response = await fetch(jsonPath);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch JSON: ${jsonPath}`);
+            }
+            const data = await response.json();
+            const sectionData = data[dataKey];
+            
+            if (sectionDiv) {
+                const badge = sectionDiv.querySelector('#section-guarantee-badge');
+                const heading = sectionDiv.querySelector('#section-guarantee-heading');
+                const text = sectionDiv.querySelector('#section-guarantee-text');
+                const motivational = sectionDiv.querySelector('#section-guarantee-motivational');
+                const cta = sectionDiv.querySelector('#section-guarantee-cta');
+                
+                if (sectionData) {
+                    // Set background color (default: #ffffff)
+                    const bgColor = sectionData['bg-color'] || '#ffffff';
+                    sectionDiv.style.backgroundColor = bgColor;
+                    
+                    // Set badge image
+                    if (badge && sectionData.badgeImage) {
+                        badge.innerHTML = `<img src="${sectionData.badgeImage}" alt="Money Back Guarantee">`;
+                    } else if (badge) {
+                        badge.style.display = 'none';
+                    }
+                    
+                    // Set heading
+                    if (heading && sectionData.heading) {
+                        heading.innerHTML = sectionData.heading;
+                    }
+                    
+                    // Set text
+                    if (text && sectionData.text) {
+                        text.innerHTML = sectionData.text;
+                    }
+                    
+                    // Set motivational text
+                    if (motivational && sectionData.motivational) {
+                        motivational.innerHTML = sectionData.motivational;
+                    }
+                    
+                    // Set CTA button
+                    if (cta && sectionData.cta) {
+                        cta.innerHTML = `
+                            <button class="section-guarantee-cta-button" onclick="${sectionData.cta.onclick || 'void(0)'}">${sectionData.cta.text}</button>
+                        `;
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error loading section guarantee content:', error);
+            console.error(`Tried to load: ${jsonPath}`);
+        }
+    })();
+})();
+</script>
+

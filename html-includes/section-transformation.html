@@ -1,0 +1,317 @@
+<!-- Section Transformation Component -->
+<style>
+.section-transformation-wrapper {
+    padding: 35px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    /* background-color will be set dynamically via JavaScript */
+}
+
+.section-transformation {
+    padding: 30px;
+    background-color: #fff;
+    border: 2px dashed #E32875;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px 0 rgba(10, 10, 10, 0.5);
+}
+
+.section-transformation-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: #300146;
+    margin-bottom: 20px;
+    text-align: center;
+    line-height: 30px;
+}
+
+.section-transformation-title .highlight {
+    color: #E32875;
+}
+
+.section-transformation-intro {
+    font-family: 'Figtree', sans-serif;
+    font-size: 18px;
+    line-height: 30px;
+    color: #0A0A0A;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.section-transformation-changes {
+    margin-bottom: 30px;
+}
+
+.section-transformation-changes-list {
+    list-style: none;
+    padding: 0;
+    margin: 15px 0;
+}
+
+.section-transformation-changes-list li {
+    font-family: 'Figtree', sans-serif;
+    font-size: 18px;
+    line-height: 30px;
+    color: #0A0A0A;
+    margin-bottom: 10px;
+    padding-left: 0;
+}
+
+.section-transformation-images {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 30px 0;
+}
+
+.section-transformation-image {
+    max-width: 500px;
+    width: 100%;
+}
+
+.section-transformation-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    display: block;
+}
+
+.section-transformation-explanation {
+    font-family: 'Figtree', sans-serif;
+    font-size: 18px;
+    line-height: 30px;
+    color: #0A0A0A;
+    margin: 30px 0;
+    text-align: left;
+    font-style: italic;
+}
+
+.section-transformation-progress-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #300146;
+    margin: 30px 0 20px 0;
+    text-align: left;
+}
+
+.section-transformation-days {
+    margin-top: 20px;
+}
+
+.section-transformation-day {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.section-transformation-day-number {
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #300146;
+    min-width: 60px;
+    margin-right: 15px;
+}
+
+.section-transformation-day-content {
+    flex: 1;
+}
+
+.section-transformation-day-box {
+    background-color: #FFF5F8;
+    border: 1px solid #300146;
+    border-radius: 8px;
+    padding: 12px 15px;
+}
+
+.section-transformation-day-box-text {
+    font-family: 'Figtree', sans-serif;
+    font-size: 16px;
+    line-height: 24px;
+    color: #0A0A0A;
+    margin: 0;
+}
+
+.section-transformation-conclusion {
+    margin-top: 30px;
+}
+
+.section-transformation-conclusion p {
+    font-family: 'Figtree', sans-serif;
+    font-size: 18px;
+    line-height: 30px;
+    color: #0A0A0A;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+@media (max-width: 768px) {
+    .section-transformation {
+        padding: 17px 15px;
+    }
+    
+    .section-transformation-images {
+        flex-direction: column;
+    }
+    
+    .section-transformation-day-number {
+        min-width: auto;
+        margin-right: 10px;
+    }
+}
+</style>
+
+<div class="section-transformation-wrapper">
+    <div class="section-transformation">
+        <div class="section-transformation-title" id="section-transformation-title">
+            Loading...
+        </div>
+    
+    <div class="section-transformation-intro" id="section-transformation-intro">
+        Loading...
+    </div>
+    
+    <div class="section-transformation-changes">
+        <ul class="section-transformation-changes-list" id="section-transformation-changes-list">
+            <!-- Changes will be dynamically inserted here -->
+        </ul>
+    </div>
+    
+    <div class="section-transformation-images" id="section-transformation-images">
+        <!-- Images will be dynamically inserted here -->
+    </div>
+    
+    <div class="section-transformation-explanation" id="section-transformation-explanation">
+        Loading...
+    </div>
+    
+    <div class="section-transformation-progress-title" id="section-transformation-progress-title">
+        Loading...
+    </div>
+    
+    <div class="section-transformation-days" id="section-transformation-days">
+        <!-- Days will be dynamically inserted here -->
+    </div>
+    
+    <div class="section-transformation-conclusion" id="section-transformation-conclusion">
+        <!-- Conclusion will be dynamically inserted here -->
+    </div>
+</div>
+
+<script>
+(function() {
+    // Get page-name from pageConfig (defined in the parent HTML)
+    const pageName = (typeof pageConfig !== 'undefined' && pageConfig['page-name']) 
+        ? pageConfig['page-name'] 
+        : 'index';
+    
+    // Get the base path from the current script location
+    const scriptPath = document.currentScript ? document.currentScript.src : '';
+    const basePath = scriptPath ? scriptPath.substring(0, scriptPath.lastIndexOf('/')) : '';
+    const jsonPath = basePath 
+        ? `${basePath}/page-content/${pageName}.json` 
+        : `html-includes/page-content/${pageName}.json`;
+    
+    (async function() {
+        // Get the dataKey from the container's data attribute
+        const container = document.currentScript ? document.currentScript.closest('.component-container') : null;
+        const dataKey = container ? container.getAttribute('data-key') : 'section-transformation';
+        
+        // Find elements within this specific container instance
+        const wrapperDiv = container ? container.querySelector('.section-transformation-wrapper') : null;
+        const sectionDiv = container ? container.querySelector('.section-transformation') : null;
+        
+        try {
+            const response = await fetch(jsonPath);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch JSON: ${jsonPath}`);
+            }
+            const data = await response.json();
+            const sectionData = data[dataKey];
+            
+            if (wrapperDiv && sectionDiv) {
+                // Set background color on wrapper (default: #ffffff)
+                const bgColor = sectionData['bg-color'] || '#ffffff';
+                wrapperDiv.style.backgroundColor = bgColor;
+                
+                const title = sectionDiv.querySelector('#section-transformation-title');
+                const intro = sectionDiv.querySelector('#section-transformation-intro');
+                const changesList = sectionDiv.querySelector('#section-transformation-changes-list');
+                const imagesContainer = sectionDiv.querySelector('#section-transformation-images');
+                const explanation = sectionDiv.querySelector('#section-transformation-explanation');
+                const progressTitle = sectionDiv.querySelector('#section-transformation-progress-title');
+                const daysContainer = sectionDiv.querySelector('#section-transformation-days');
+                const conclusion = sectionDiv.querySelector('#section-transformation-conclusion');
+                
+                if (sectionData) {
+                    // Set title
+                    if (title && sectionData.title) {
+                        title.innerHTML = sectionData.title;
+                    }
+                    
+                    // Set intro
+                    if (intro && sectionData.intro) {
+                        intro.innerHTML = sectionData.intro;
+                    }
+                    
+                    // Set changes list
+                    if (changesList && sectionData.changes && Array.isArray(sectionData.changes)) {
+                        changesList.innerHTML = sectionData.changes.map(change => 
+                            `<li>${change}</li>`
+                        ).join('');
+                    }
+                    
+                    // Set image
+                    if (imagesContainer && sectionData.image) {
+                        imagesContainer.innerHTML = `
+                            <div class="section-transformation-image">
+                                <img src="${sectionData.image}" alt="Bailey transformation">
+                            </div>
+                        `;
+                    }
+                    
+                    // Set explanation
+                    if (explanation && sectionData.explanation) {
+                        explanation.innerHTML = sectionData.explanation;
+                    }
+                    
+                    // Set progress title
+                    if (progressTitle && sectionData.progressTitle) {
+                        progressTitle.innerHTML = sectionData.progressTitle;
+                    }
+                    
+                    // Set days
+                    if (daysContainer && sectionData.days && Array.isArray(sectionData.days)) {
+                        daysContainer.innerHTML = sectionData.days.map(day => 
+                            `<div class="section-transformation-day">
+                                <div class="section-transformation-day-checkmark">
+                                    <img src="images/5610944 (2) 1.png" alt="Checkmark">
+                                </div>
+                                <div class="section-transformation-day-number">${day.day}</div>
+                                <div class="section-transformation-day-content">
+                                    <div class="section-transformation-day-box">
+                                        <div class="section-transformation-day-box-text">${day.text}</div>
+                                    </div>
+                                </div>
+                            </div>`
+                        ).join('');
+                    }
+                    
+                    // Set conclusion
+                    if (conclusion && sectionData.conclusion && Array.isArray(sectionData.conclusion)) {
+                        conclusion.innerHTML = sectionData.conclusion.map(text => 
+                            `<p>${text}</p>`
+                        ).join('');
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error loading section transformation content:', error);
+            console.error(`Tried to load: ${jsonPath}`);
+        }
+    })();
+})();
+</script>
+

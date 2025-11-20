@@ -1,0 +1,222 @@
+<!-- Hero Section Component -->
+<style>
+.hero {
+    padding: 17px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #ffffff;
+}
+
+.hero-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.hero-logo img {
+    height: 40px;
+    width: auto;
+}
+
+.hero-headline {
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+.hero-headline h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 30px;
+    margin: 0;
+}
+
+.hero-headline .headline-part1 {
+    color: #300146;
+    display: inline !important;
+}
+
+.hero-headline .headline-part2 {
+    color: #E32875;
+    display: inline !important;
+}
+
+.hero-divider {
+    width: 100%;
+    height: 1px;
+    background-color: #e5e7eb;
+    margin-bottom: 10px;
+}
+
+.hero-divider:last-of-type {
+    margin-top: 35px;
+    margin-bottom: 10px;
+}
+
+.hero-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.hero-author img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.hero-author-text {
+    font-family: 'Figtree', sans-serif;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.hero-image {
+    width: 100%;
+    border-radius: 12px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.hero-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    display: block;
+}
+
+.hero-description {
+    font-family: 'Figtree', sans-serif;
+    font-size: 18px;
+    line-height: 30px;
+    color: #0A0A0A;
+}
+
+.hero-description .highlight {
+    color: #E32875;
+}
+
+@media (max-width: 768px) {
+    .hero {
+        padding: 17px 15px;
+    }
+    
+    .hero-headline h1 {
+        font-size: 26px;
+    }
+    
+    .hero-description {
+        font-size: 18px;
+    }
+}
+</style>
+
+<div class="hero">
+    <div class="hero-logo">
+        <img src="images/logo.png" alt="Happi Pup Logo" id="hero-logo-img">
+    </div>
+    
+    <div class="hero-headline" id="hero-headline">
+        <h1>
+            <span class="headline-part1" id="headline-part1">Loading...</span>
+            <span class="headline-part2" id="headline-part2"></span>
+        </h1>
+    </div>
+    
+    <div class="hero-divider"></div>
+    
+    <div class="hero-author">
+        <img src="images/author.png" alt="Author" id="hero-author-img">
+        <div class="hero-author-text" id="hero-author-text">Loading...</div>
+    </div>
+    
+    <div class="hero-image">
+        <img src="" alt="Lead Image" id="hero-image-img">
+    </div>
+    
+    <div class="hero-description" id="hero-description">
+        Loading...
+    </div>
+    
+    <div class="hero-divider"></div>
+</div>
+
+<script>
+(function() {
+    // Get page-name from pageConfig (defined in the parent HTML)
+    const pageName = (typeof pageConfig !== 'undefined' && pageConfig['page-name']) 
+        ? pageConfig['page-name'] 
+        : 'index';
+    
+    // Get the base path from the current script location
+    const scriptPath = document.currentScript ? document.currentScript.src : '';
+    const basePath = scriptPath ? scriptPath.substring(0, scriptPath.lastIndexOf('/')) : '';
+    const jsonPath = basePath 
+        ? `${basePath}/page-content/${pageName}.json` 
+        : `html-includes/page-content/${pageName}.json`;
+    
+    (async function() {
+        try {
+            const response = await fetch(jsonPath);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch JSON: ${jsonPath}`);
+            }
+            const data = await response.json();
+            const hero = data.hero;
+            
+            const headlinePart1 = document.getElementById('headline-part1');
+            const headlinePart2 = document.getElementById('headline-part2');
+            const authorText = document.getElementById('hero-author-text');
+            const description = document.getElementById('hero-description');
+            const heroImage = document.getElementById('hero-image-img');
+            
+            if (hero) {
+                if (headlinePart1 && hero['headline-part1']) {
+                    headlinePart1.innerHTML = hero['headline-part1'];
+                }
+                if (headlinePart2 && hero['headline-part2']) {
+                    headlinePart2.innerHTML = hero['headline-part2'];
+                }
+                if (authorText && hero.author) {
+                    authorText.textContent = hero.author;
+                }
+                if (heroImage && hero.image) {
+                    heroImage.src = hero.image;
+                }
+                if (description && hero.description) {
+                    description.innerHTML = hero.description;
+                }
+            }
+        } catch (error) {
+            console.error('Error loading hero content:', error);
+            console.error(`Tried to load: ${jsonPath}`);
+            // Fallback content
+            const headlinePart1 = document.getElementById('headline-part1');
+            const headlinePart2 = document.getElementById('headline-part2');
+            const authorText = document.getElementById('hero-author-text');
+            
+            if (headlinePart1) {
+                headlinePart1.innerHTML = 'I Almost Gave Up On My Dog...';
+            }
+            if (headlinePart2) {
+                headlinePart2.innerHTML = 'Until This Transformed Her Behavior In Just 7 Days';
+            }
+            if (authorText) {
+                authorText.textContent = 'Posted by Dr. Emily Patterson';
+            }
+            const description = document.getElementById('hero-description');
+            const heroImage = document.getElementById('hero-image-img');
+            if (heroImage) {
+                heroImage.src = 'images/lead dog 1.png';
+            }
+            if (description) {
+                description.innerHTML = 'Veterinarians are calling this simple "nervous system healing" one of the most effective breakthroughs for <span class="highlight">stopping separation anxiety, excessive barking, leash aggression, and disobedience</span> - all without costly training sessions or risky medications.';
+            }
+        }
+    })();
+})();
+</script>
+

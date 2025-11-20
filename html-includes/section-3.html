@@ -1,0 +1,175 @@
+<!-- Section 3 Component -->
+<style>
+.section-3 {
+    padding: 17px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #ffffff;
+}
+
+.section-3-headline {
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 30px;
+    color: #300146;
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.section-3-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+}
+
+.section-3-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    /* background-color will be set dynamically via JavaScript */
+    padding: 12px 15px;
+    border-radius: 8px;
+}
+
+.section-3-list li img {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.section-3-list li span {
+    font-family: 'Figtree', sans-serif;
+    font-size: 18px;
+    line-height: 30px;
+    color: #0A0A0A;
+}
+
+.section-3-conclusion {
+    font-family: 'Figtree', sans-serif;
+    font-size: 18px;
+    line-height: 30px;
+    color: #0A0A0A;
+    text-align: left;
+}
+
+@media (max-width: 768px) {
+    .section-3 {
+        padding: 17px 15px;
+    }
+    
+    .section-3-headline {
+        font-size: 20px;
+    }
+    
+    .section-3-list li span {
+        font-size: 18px;
+    }
+    
+    .section-3-conclusion {
+        font-size: 18px;
+    }
+}
+</style>
+
+<div class="section-3">
+    <div class="section-3-headline" id="section-3-headline">
+        Loading...
+    </div>
+    
+    <ul class="section-3-list" id="section-3-list">
+        Loading...
+    </ul>
+    
+    <div class="section-3-conclusion" id="section-3-conclusion">
+        Loading...
+    </div>
+</div>
+
+<script>
+(function() {
+    // Get page-name from pageConfig (defined in the parent HTML)
+    const pageName = (typeof pageConfig !== 'undefined' && pageConfig['page-name']) 
+        ? pageConfig['page-name'] 
+        : 'index';
+    
+    // Get the base path from the current script location
+    const scriptPath = document.currentScript ? document.currentScript.src : '';
+    const basePath = scriptPath ? scriptPath.substring(0, scriptPath.lastIndexOf('/')) : '';
+    const jsonPath = basePath 
+        ? `${basePath}/page-content/${pageName}.json` 
+        : `html-includes/page-content/${pageName}.json`;
+    
+    (async function() {
+        // Get the dataKey from the container's data attribute
+        const container = document.currentScript ? document.currentScript.closest('.component-container') : null;
+        const dataKey = container ? container.getAttribute('data-key') : 'section-3';
+        
+        // Find elements within this specific container instance
+        const sectionDiv = container ? container.querySelector('.section-3') : null;
+        
+        try {
+            const response = await fetch(jsonPath);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch JSON: ${jsonPath}`);
+            }
+            const data = await response.json();
+            const sectionData = data[dataKey];
+            
+            if (sectionDiv) {
+                const headline = sectionDiv.querySelector('#section-3-headline');
+                const list = sectionDiv.querySelector('#section-3-list');
+                const conclusion = sectionDiv.querySelector('#section-3-conclusion');
+                
+                if (sectionData) {
+                    if (headline && sectionData.headline !== undefined) {
+                        if (sectionData.headline === '') {
+                            headline.style.display = 'none';
+                        } else {
+                            headline.innerHTML = sectionData.headline;
+                            headline.style.display = 'block';
+                        }
+                    }
+                    if (list && sectionData.items && Array.isArray(sectionData.items)) {
+                        // Set background color for list items (default: #FFF5F8)
+                        const bgColor = sectionData['list-bg-color'] || '#FFF5F8';
+                        list.innerHTML = sectionData.items.map(item => 
+                            `<li style="background-color: ${bgColor}"><img src="images/ref cross 1.png" alt="X"><span>${item}</span></li>`
+                        ).join('');
+                    }
+                    if (conclusion && sectionData.conclusion !== undefined) {
+                        if (sectionData.conclusion === '') {
+                            conclusion.style.display = 'none';
+                        } else {
+                            conclusion.innerHTML = sectionData.conclusion;
+                            conclusion.style.display = 'block';
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error loading section 3 content:', error);
+            console.error(`Tried to load: ${jsonPath}`);
+            // Fallback content
+            if (sectionDiv) {
+                const headline = sectionDiv.querySelector('#section-3-headline');
+                const list = sectionDiv.querySelector('#section-3-list');
+                const conclusion = sectionDiv.querySelector('#section-3-conclusion');
+                
+                if (headline) {
+                    headline.innerHTML = 'This Groundbreaking Reset Method Will Stop:';
+                }
+                if (list) {
+                    const bgColor = '#FFF5F8'; // Default background color
+                    list.innerHTML = `<li style="background-color: ${bgColor}"><img src="images/ref cross 1.png" alt="X"><span>Constant barking at strangers, doorbells, and other dogs</span></li><li style="background-color: ${bgColor}"><img src="images/ref cross 1.png" alt="X"><span>Ignoring commands and refusing to listen</span></li><li style="background-color: ${bgColor}"><img src="images/ref cross 1.png" alt="X"><span>Destructive anxiety when left alone</span></li><li style="background-color: ${bgColor}"><img src="images/ref cross 1.png" alt="X"><span>Aggressive pulling and reactivity during walks</span></li><li style="background-color: ${bgColor}"><img src="images/ref cross 1.png" alt="X"><span>Non-stop hyperactivity and restlessness</span></li>`;
+                }
+                if (conclusion) {
+                    conclusion.innerHTML = '...with just 20 minutes each day.';
+                }
+            }
+        }
+    })();
+})();
+</script>
+

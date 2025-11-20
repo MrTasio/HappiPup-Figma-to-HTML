@@ -1,0 +1,239 @@
+<!-- Section Closing Component -->
+<style>
+.section-closing {
+    padding: 17px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    /* background-color will be set dynamically via JavaScript, default: #ffffff */
+}
+
+.section-closing-headline {
+    font-family: 'Poppins', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 40px;
+    color: #5C1E6B;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.section-closing-content {
+    font-family: 'Figtree', sans-serif;
+    font-size: 16px;
+    line-height: 22px;
+    color: #0A0A0A;
+    margin-bottom: 30px;
+}
+
+.section-closing-content p {
+    margin-bottom: 20px;
+}
+
+.section-closing-content p:last-child {
+    margin-bottom: 0;
+}
+
+.section-closing-content .bold-purple {
+    font-weight: 700;
+    color: #5C1E6B;
+}
+
+.section-closing-cta {
+    text-align: center;
+    margin: 30px 0 10px;
+}
+
+.section-closing-cta-button {
+    background-color: #28A745;
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 18px 30px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    text-transform: uppercase;
+    display: block;
+    transition: background-color 0.3s;
+    line-height: 26px;
+}
+
+.section-closing-cta-button:hover {
+    background-color: #218838;
+}
+
+.section-closing-guarantee {
+    font-family: 'Figtree', sans-serif;
+    font-size: 12px;
+    line-height: 24px;
+    color: #0A0A0A;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.section-closing-ps {
+    font-family: 'Figtree', sans-serif;
+    font-size: 14px;
+    line-height: 22px;
+    color: #0A0A0A;
+    margin: 30px 0;
+    padding-top: 30px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.section-closing-signature {
+    font-family: 'Figtree', sans-serif;
+    font-size: 16px;
+    line-height: 30px;
+    color: #0A0A0A;
+    margin-top: 30px;
+}
+
+.section-closing-signature .welcome {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.section-closing-signature .name {
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.section-closing-signature .email {
+    margin-top: 15px;
+}
+
+@media (max-width: 768px) {
+    .section-closing {
+        padding: 17px 15px;
+    }
+    
+    .section-closing-headline {
+        font-size: 26px;
+        line-height: 32px;
+    }
+}
+</style>
+
+<div class="section-closing">
+    <div class="section-closing-headline" id="section-closing-headline">
+        Loading...
+    </div>
+    
+    <div class="section-closing-content" id="section-closing-content">
+        Loading...
+    </div>
+    
+    <div class="section-closing-cta" id="section-closing-cta">
+        <!-- CTA button will be dynamically inserted here -->
+    </div>
+    
+    <div class="section-closing-guarantee" id="section-closing-guarantee">
+        Loading...
+    </div>
+    
+    <div class="section-closing-ps" id="section-closing-ps">
+        Loading...
+    </div>
+    
+    <div class="section-closing-signature" id="section-closing-signature">
+        Loading...
+    </div>
+</div>
+
+<script>
+(function() {
+    // Get page-name from pageConfig (defined in the parent HTML)
+    const pageName = (typeof pageConfig !== 'undefined' && pageConfig['page-name']) 
+        ? pageConfig['page-name'] 
+        : 'index';
+    
+    // Get the base path from the current script location
+    const scriptPath = document.currentScript ? document.currentScript.src : '';
+    const basePath = scriptPath ? scriptPath.substring(0, scriptPath.lastIndexOf('/')) : '';
+    const jsonPath = basePath 
+        ? `${basePath}/page-content/${pageName}.json` 
+        : `html-includes/page-content/${pageName}.json`;
+    
+    (async function() {
+        // Get the dataKey from the container's data attribute
+        const container = document.currentScript ? document.currentScript.closest('.component-container') : null;
+        const dataKey = container ? container.getAttribute('data-key') : 'section-closing';
+        
+        // Find elements within this specific container instance
+        const sectionDiv = container ? container.querySelector('.section-closing') : null;
+        
+        try {
+            const response = await fetch(jsonPath);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch JSON: ${jsonPath}`);
+            }
+            const data = await response.json();
+            const sectionData = data[dataKey];
+            
+            if (sectionDiv) {
+                const headline = sectionDiv.querySelector('#section-closing-headline');
+                const content = sectionDiv.querySelector('#section-closing-content');
+                const cta = sectionDiv.querySelector('#section-closing-cta');
+                const guarantee = sectionDiv.querySelector('#section-closing-guarantee');
+                const ps = sectionDiv.querySelector('#section-closing-ps');
+                const signature = sectionDiv.querySelector('#section-closing-signature');
+                
+                if (sectionData) {
+                    // Set background color (default: #ffffff)
+                    const bgColor = sectionData['bg-color'] || '#ffffff';
+                    sectionDiv.style.backgroundColor = bgColor;
+                    
+                    // Set headline
+                    if (headline && sectionData.headline) {
+                        headline.innerHTML = sectionData.headline;
+                    }
+                    
+                    // Set content
+                    if (content && sectionData.content) {
+                        content.innerHTML = sectionData.content;
+                    }
+                    
+                    // Set CTA button
+                    if (cta && sectionData.cta) {
+                        cta.innerHTML = `
+                            <button class="section-closing-cta-button" onclick="${sectionData.cta.onclick || 'void(0)'}">${sectionData.cta.text}</button>
+                        `;
+                    }
+                    
+                    // Set guarantee text
+                    if (guarantee && sectionData.guarantee) {
+                        guarantee.innerHTML = sectionData.guarantee;
+                    }
+                    
+                    // Set P.S. text
+                    if (ps && sectionData.ps) {
+                        ps.innerHTML = sectionData.ps;
+                    }
+                    
+                    // Set signature
+                    if (signature && sectionData.signature) {
+                        signature.innerHTML = `
+                            <div class="welcome">${sectionData.signature.welcome || ''}</div>
+                            <div class="name">${sectionData.signature.name || ''}</div>
+                            <div>${sectionData.signature.title || ''}</div>
+                            <div class="email">${sectionData.signature.email || ''}</div>
+                        `;
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error loading section closing content:', error);
+            console.error(`Tried to load: ${jsonPath}`);
+        }
+    })();
+})();
+</script>
+
