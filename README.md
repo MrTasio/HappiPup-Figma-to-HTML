@@ -141,6 +141,13 @@ This ensures each component instance finds its own elements, even when used mult
 ## 🔧 Development
 
 ### Running Locally
+
+**Option 1: Using the provided script (Recommended)**
+```bash
+./start-server.sh
+```
+
+**Option 2: Manual methods**
 1. Open `index.html` in a browser, or
 2. Use a local server (e.g., `python -m http.server` or `npx serve`)
 
